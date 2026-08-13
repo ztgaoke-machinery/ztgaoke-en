@@ -1,0 +1,5 @@
+# ZTGAOKE Machinery English website
+User-agent: *
+Allow: /
+
+Sitemap: https://en.ztgaoke.com/sitemap.xml
