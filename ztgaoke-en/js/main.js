@@ -74,7 +74,7 @@
           'Product: ' + (form.elements['product'] ? form.elements['product'].value : '') + '\n' +
           'Message:\n' + (form.elements['message'] ? form.elements['message'].value : '')
         );
-        window.location.href = 'mailto:sales@ztgaoke.com?subject=' + subject + '&body=' + body;
+        window.location.href = 'mailto:sales@ztgaokemachine.com?subject=' + subject + '&body=' + body;
         status.className = 'form-status ok';
         status.textContent = 'Opening your email app... You can also WhatsApp/phone us directly.';
       }
