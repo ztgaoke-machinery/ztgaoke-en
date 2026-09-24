@@ -37,6 +37,11 @@
   // Contact form: send via Web3Forms if configured, otherwise fallback to mailto
   var form = document.getElementById('inquiry-form');
   if (form) {
+    // Status texts can be overridden per-locale via data-msg-* attributes.
+    var msg = function (key, fallback) {
+      return form.getAttribute('data-msg-' + key) || fallback;
+    };
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       var status = document.getElementById('form-status');
@@ -45,22 +50,22 @@
       if (accessKey && accessKey.indexOf('YOUR_WEB3FORMS') === -1) {
         var fd = new FormData(form);
         status.className = 'form-status';
-        status.textContent = 'Sending...';
+        status.textContent = msg('sending', 'Sending...');
         fetch('https://api.web3forms.com/submit', {
           method: 'POST',
           body: fd
         }).then(function (r) { return r.json(); }).then(function (data) {
           if (data.success) {
             status.className = 'form-status ok';
-            status.textContent = 'Thank you! Your inquiry has been sent. We will reply within 24 hours.';
+            status.textContent = msg('ok', 'Thank you! Your inquiry has been sent. We will reply within 24 hours.');
             form.reset();
           } else {
             status.className = 'form-status err';
-            status.textContent = 'Sorry, sending failed. Please email us directly or try again.';
+            status.textContent = msg('err', 'Sorry, sending failed. Please email us directly or try again.');
           }
         }).catch(function () {
           status.className = 'form-status err';
-          status.textContent = 'Network error. Please email us directly or try again.';
+          status.textContent = msg('neterr', 'Network error. Please email us directly or try again.');
         });
       } else {
         // Fallback: build a mailto link
@@ -76,7 +81,7 @@
         );
         window.location.href = 'mailto:Rungin231220@gmail.com?subject=' + subject + '&body=' + body;
         status.className = 'form-status ok';
-        status.textContent = 'Opening your email app... You can also WhatsApp/phone us directly.';
+        status.textContent = msg('mailto', 'Opening your email app... You can also WhatsApp/phone us directly.');
       }
     });
   }
