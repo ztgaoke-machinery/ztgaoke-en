@@ -113,3 +113,46 @@
     el.textContent = new Date().getFullYear();
   });
 })();
+
+// Updates month filter: buttons are generated from the update-card ids
+(function () {
+  var wrap = document.getElementById('update-filter');
+  if (!wrap) { return; }
+  var cards = Array.prototype.slice.call(document.querySelectorAll('article.update-card[id^="update-"]'));
+  if (!cards.length) { return; }
+  var months = [];
+  cards.forEach(function (c) {
+    var m = c.id.substring(7, 14);
+    if (months.indexOf(m) === -1) { months.push(m); }
+  });
+  months.sort();
+  months.reverse();
+  var ru = document.documentElement.lang === 'ru';
+  var names = ru
+    ? ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек']
+    : ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  function label(m) {
+    var p = m.split('-');
+    return names[parseInt(p[1], 10) - 1] + ' ' + p[0];
+  }
+  function apply(month) {
+    wrap.querySelectorAll('.filter-btn').forEach(function (b) {
+      b.classList.toggle('active', b.getAttribute('data-month') === month);
+    });
+    cards.forEach(function (c) {
+      c.style.display = (!month || c.id.indexOf('update-' + month) === 0) ? '' : 'none';
+    });
+  }
+  function addBtn(text, month) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'filter-btn';
+    b.textContent = text;
+    b.setAttribute('data-month', month);
+    b.addEventListener('click', function () { apply(month); });
+    wrap.appendChild(b);
+  }
+  addBtn(ru ? 'Все' : 'All', '');
+  months.forEach(function (m) { addBtn(label(m), m); });
+  apply('');
+})();
